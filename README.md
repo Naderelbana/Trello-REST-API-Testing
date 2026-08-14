@@ -130,7 +130,7 @@ Trello-API-Testing/
 │
 ├── README.md
 ├── Trello_API_Testing.postman_collection.json
-└── Trello_Testing_Environment.json
+└── Trello_TestingEnv.json
 ```
 
 > The environment file must contain no real API Token or other sensitive credentials before being uploaded to GitHub.
