@@ -152,7 +152,5 @@ Trello-API-Testing/
 
 ## Author
 
-## Author
-
 Nader Elbanna  
 Junior QA Engineer | Manual Testing | API Testing
