@@ -1,0 +1,1930 @@
+{
+  "info": {
+    "_postman_id": "6b0b44c2-3bcb-41d0-8158-dcffdf0e127b",
+    "name": "Trello Apis",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "37599851"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "TC01 - Verify Authentication",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/members/me?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "members",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Boards",
+      "item": [
+        {
+          "name": "TC02 - Create Board - Valid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"Board_Id\", response.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/?name=API Testing Project&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "API Testing Project"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC03 - Get Board - Valid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains board ID\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board ID matches the requested board\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"API Testing Project\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/:{id}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                ":{id}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "{id}",
+                  "value": "{{Board_Id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC04 - Get Board - Invalid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response body contains invalid id\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.eql(\"The requested resource was not found.\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/:{id}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                ":{id}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "{id}",
+                  "value": "6a7e10be6b89e692c316ce8a"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC05 - Update Board Name - Valid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board name was updated successfully\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"API Testing Project Updated\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/:{id}?name=API Testing Project Updated&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                ":{id}"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "API Testing Project Updated"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "{id}",
+                  "value": "{{Board_Id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC06 - Delete Board - Valid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/{{Board_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                "{{Board_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC07 - Get Deleted Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/{{Board_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                "{{Board_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lists",
+      "item": [
+        {
+          "name": "TC08 - Create Board for Lists",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board ID is generated\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"API Testing Lists Board\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"Board_Id\", response.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/?name=API Testing Lists Board&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "API Testing Lists Board"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC09 - Create List - Valid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is generated\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"To Do\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"list_Id\", response.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists?name=To Do&idBoard={{Board_Id}}&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "To Do"
+                },
+                {
+                  "key": "idBoard",
+                  "value": "{{Board_Id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC10 - Get List - Valid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"To Do\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC11 - Get List - Non-existent ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/6a7e1b45d4a1f8e6b7062b8a?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "6a7e1b45d4a1f8e6b7062b8a"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC12 - Update List Name - Valid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List name was updated successfully\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"In Progress\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}/name?value=In Progress&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}",
+                "name"
+              ],
+              "query": [
+                {
+                  "key": "value",
+                  "value": "In Progress"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC13 - Verify Updated List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Updated list name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"In Progress\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC14 - Archive List - Valid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List is archived\", function () {\r",
+                  "    pm.expect(response.closed).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}/closed?value=true&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}",
+                "closed"
+              ],
+              "query": [
+                {
+                  "key": "value",
+                  "value": "true"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC15 - Verify Archived List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List is archived\", function () {\r",
+                  "    pm.expect(response.closed).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Updated list name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"In Progress\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC16 - Unarchive List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List is unarchived\", function () {\r",
+                  "    pm.expect(response.closed).to.eql(false);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}/closed?value=false&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}",
+                "closed"
+              ],
+              "query": [
+                {
+                  "key": "value",
+                  "value": "false"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cards",
+      "item": [
+        {
+          "name": "TC17 - Create Card - Valid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card ID is generated\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"Test Login Card\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct list\", function () {\r",
+                  "    pm.expect(response.idList).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"card_Id\", response.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/cards?name=Test Login Card&idList={{list_Id}}&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Test Login Card"
+                },
+                {
+                  "key": "idList",
+                  "value": "{{list_Id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC18 - Get Card - Valid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"card_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"Test Login Card\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct list\", function () {\r",
+                  "    pm.expect(response.idList).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC19 - Get Card - Non-existent ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/6a7e25c87ee6b9ec565b610f?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "6a7e25c87ee6b9ec565b610f"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC20 - Update Card Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"card_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card name was updated successfully\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"API Testing - Login Test\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct list\", function () {\r",
+                  "    pm.expect(response.idList).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}?name=API Testing - Login Test&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "API Testing - Login Test"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC21 - Verify Updated Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"card_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"API Testing - Login Test\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct list\", function () {\r",
+                  "    pm.expect(response.idList).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct board\", function () {\r",
+                  "    pm.expect(response.idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC22 - Delete Card - Valid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC23 - Get Deleted Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC24 - Create a New Card - Valid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card ID is generated\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card name is correct\", function () {\r",
+                  "    pm.expect(response.name).to.eql(\"Test Login Card\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Card belongs to the correct list\", function () {\r",
+                  "    pm.expect(response.idList).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"card_Id\", response.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/cards?name=Test Login Card&idList={{list_Id}}&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Test Login Card"
+                },
+                {
+                  "key": "idList",
+                  "value": "{{list_Id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Testing",
+      "item": [
+        {
+          "name": "TC25 - Create Card - Missing ID List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message is correct\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"invalid value for idList\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards?name=Test Login Card&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Test Login Card"
+                },
+                {
+                  "key": "",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC26 - Create List - Missing Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message is correct\", function () {\r",
+                  "    const response = pm.response.json();\r",
+                  "    pm.expect(response.message).to.eql(\"invalid value for name\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error type is BAD_REQUEST_ERROR\", function () {\r",
+                  "    const response = pm.response.json();\r",
+                  "    pm.expect(response.error).to.eql(\"BAD_REQUEST_ERROR\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists?idBoard={{Board_Id}}&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "idBoard",
+                  "value": "{{Board_Id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC27 - Update Card - Non-existent ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/6a7e25c87ee6b9ec565b6110?name=API Testing - Login Test&key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "6a7e25c87ee6b9ec565b6110"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "API Testing - Login Test"
+                },
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Relationships / Data Integrity",
+      "item": [
+        {
+          "name": "TC28 - Get Cards on Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is an array\", function () {\r",
+                  "    pm.expect(response).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"All cards have ID and name\", function () {\r",
+                  "\r",
+                  "    for (let i = 0; i < response.length; i++) {\r",
+                  "\r",
+                  "        pm.expect(response[i]).to.have.property(\"id\");\r",
+                  "        pm.expect(response[i]).to.have.property(\"name\");\r",
+                  "\r",
+                  "    }\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"All cards belong to the requested board\", function () {\r",
+                  "\r",
+                  "    for (let i = 0; i < response.length; i++) {\r",
+                  "\r",
+                  "        pm.expect(response[i].idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "\r",
+                  "    }\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/{{Board_Id}}/cards?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                "{{Board_Id}}",
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC29 - Get Lists on Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is an array\", function () {\r",
+                  "    pm.expect(response).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Each list contains required fields\", function () {\r",
+                  "    for (let i = 0; i < response.length - 1; i++){\r",
+                  "        pm.expect(response[i]).to.have.property(\"id\");\r",
+                  "        pm.expect(response[i]).to.have.property(\"name\");\r",
+                  "        pm.expect(response[i].closed).to.eql(false);\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"All cards belong to the requested board\", function () {\r",
+                  "\r",
+                  "    for (let i = 0; i < response.length; i++) {\r",
+                  "\r",
+                  "        pm.expect(response[i].idBoard).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "\r",
+                  "    }\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/boards/{{Board_Id}}/lists?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "boards",
+                "{{Board_Id}}",
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC30 - Get Board of List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board name exists\", function () {\r",
+                  "    pm.expect(response.name).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}/board?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}",
+                "board"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC31 - Get Cards in List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is an array\", function () {\r",
+                  "    pm.expect(response).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"All cards have ID and name\", function () {\r",
+                  "\r",
+                  "    for (let i = 0; i < response.length; i++) {\r",
+                  "        pm.expect(response[i].id).to.exist;\r",
+                  "        pm.expect(response[i].name).to.exist;\r",
+                  "    }\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"All cards belong to the requested list\", function () {\r",
+                  "\r",
+                  "    for (let i = 0; i < response.length; i++) {\r",
+                  "        pm.expect(response[i].idList).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "    }\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/lists/{{list_Id}}/cards?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_Id}}",
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC32 - Get Board of Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"Board_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Board name exists\", function () {\r",
+                  "    pm.expect(response.name).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}/board?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}",
+                "board"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC33 - Get List of Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List ID is correct\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"list_Id\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"List name exists\", function () {\r",
+                  "    pm.expect(response.name).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cards/{{card_Id}}/list?key={{ApiKey}}&token={{ApiToken}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_Id}}",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{ApiKey}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{ApiToken}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
