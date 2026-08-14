@@ -1,0 +1,46 @@
+{
+	"id": "64ebbfe5-9c4b-4bed-8ac8-d4f7e79aba18",
+	"name": "Trello_TestingEnv",
+	"values": [
+		{
+			"key": "BaseUrl",
+			"value": "https://api.trello.com/1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ApiKey",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ApiToken",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Board_Id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "list_Id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "card_Id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-08-14T01:15:57.972Z",
+	"_postman_exported_using": "Postman/12.23.6"
+}
